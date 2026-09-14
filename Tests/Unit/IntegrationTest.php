@@ -47,7 +47,7 @@ class IntegrationTest extends TestCase
             ->willReturn($this->integration);
     }
 
-    public function testOnFormValidate()
+    public function testOnFormValidate(): void
     {
         /** @var LeadModel $leadModel */
         $leadModel = $this->getMockBuilder(LeadModel::class)
