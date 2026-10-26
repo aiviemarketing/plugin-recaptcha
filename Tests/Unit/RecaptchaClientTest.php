@@ -21,7 +21,7 @@ class RecaptchaClientTest extends TestCase
         $this->field = new Field();
     }
 
-    public function testVerifyWhenPluginIsNotInstalled()
+    public function testVerifyWhenPluginIsNotInstalled(): void
     {
         $test = $this->createRecaptchaClient()->verify('', $this->field);
         $this->assertFalse($test);

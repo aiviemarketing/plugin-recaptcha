@@ -1,7 +1,8 @@
 {
-  "name": "aiviemarketing/plugin-recaptcha",
+  "name": "aiviemarketing/mautic-recaptcha",
   "description": "This plugin brings reCAPTCHA integration to Aivie and mautic.",
   "type": "mautic-plugin",
+  "version": "6.0.0",
   "license": "GPL-3.0-only",
   "authors": [
     {
@@ -11,29 +12,15 @@
   ],
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "keywords": [
-    "mautic",
-    "plugin",
-    "integration",
-    "aivie"
-  ],
+  "keywords": ["mautic", "plugin", "integration", "aivie"],
   "require": {
-    "mautic/core-lib": "^6.0 || ^7.0",
-    "google/cloud-recaptcha-enterprise": "^1.17"
+    "mautic/core-lib": "^5.0",
+    "google/cloud-recaptcha-enterprise": "^1.15"
   },
   "extra": {
     "install-directory-name": "AivieRecaptchaBundle"
   },
   "scripts": {
-    "post-install-cmd": [
-      "@install-hooks"
-    ],
-    "post-update-cmd": [
-      "@install-hooks"
-    ],
-    "install-hooks": [
-      "bash -c 'if [ -d build/hooks ] && [ -d .git ]; then mkdir -p .git/hooks && cp build/hooks/* .git/hooks/ && chmod +x .git/hooks/*; fi'"
-    ],
     "test": [
       "@phpunit",
       "@csfixer"
@@ -48,6 +35,6 @@
     "coverage": "../../bin/phpunit -d memory_limit=1G  --bootstrap ../../vendor/autoload.php --configuration phpunit.xml --fail-on-warning --testsuite=all --coverage-text --coverage-html=Tests/Coverage",
     "csfixer": "../../bin/php-cs-fixer fix . -v --dry-run --diff --using-cache=no --config=../../.php-cs-fixer.php",
     "fixcs": "../../bin/php-cs-fixer fix . -v --using-cache=no --config=../../.php-cs-fixer.php",
-    "phpstan": "[ ! -f ../../var/cache/test/AppKernelTestDebugContainer.xml ] && (echo 'Building test cache ...'; APP_ENV=test APP_DEBUG=1 ../../bin/console > /dev/null 2>&1); php -d memory_limit=4G ../../bin/phpstan analyse ."
+    "phpstan": "[ ! -f ../../var/cache/test/AppKernelTestDebugContainer.xml ] && (echo 'Building test cache ...'; APP_ENV=test APP_DEBUG=1 ../../bin/console > /dev/null 2>&1); php -d memory_limit=4G ../../bin/phpstan analyse -c ../../phpstan.neon ."
   }
 }

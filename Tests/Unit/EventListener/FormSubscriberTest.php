@@ -16,6 +16,7 @@ use MauticPlugin\AivieRecaptchaBundle\Form\Type\RecaptchaType;
 use MauticPlugin\AivieRecaptchaBundle\Integration\ConfigInterface;
 use MauticPlugin\AivieRecaptchaBundle\RecaptchaEvents;
 use MauticPlugin\AivieRecaptchaBundle\Service\RecaptchaClient;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -23,11 +24,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormSubscriberTest extends TestCase
 {
+    /** @var EventDispatcherInterface&MockObject */
     private $eventDispatcher;
+    /** @var ConfigInterface&MockObject */
     private $config;
+    /** @var RecaptchaClient&MockObject */
     private $recaptchaClient;
+    /** @var LeadModel&MockObject */
     private $leadModel;
+    /** @var TranslatorInterface&MockObject */
     private $translator;
+    /** @var LoggerInterface&MockObject */
     private $logger;
     private FormSubscriber $subscriber;
 
@@ -119,7 +126,7 @@ class FormSubscriberTest extends TestCase
 
         $event->expects($this->once())
             ->method('addFormField')
-            ->with('plugin.recaptcha', $this->callback(function ($options) {
+            ->with('plugin.recaptcha', $this->callback(function (array $options): bool {
                 return RecaptchaType::class === $options['formType']
                     && '@AivieRecaptcha/Field/recaptcha.html.twig' === $options['template']
                     && true === $options['isEnabled']

@@ -118,7 +118,7 @@ class FormSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->failedValidation(null === $this->translator ? 'reCAPTCHA was not successful.' : $this->translator->trans('mautic.integration.recaptcha.failure_message'));
+        $event->failedValidation($this->translator->trans('mautic.integration.recaptcha.failure_message'));
 
         $this->eventDispatcher->addListener(LeadEvents::LEAD_POST_SAVE, function (LeadEvent $event) {
             $this->logger->info('Recaptcha: lead is not valid', [
