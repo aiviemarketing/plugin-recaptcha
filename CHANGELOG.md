@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [7.2.4](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.3...v7.2.4) (2026-10-26)
+
+
+### Features
+
+* **repo:** update Aivie plugins for Mautic 7.2 and PHP 8.5 ([2e138e8](https://github.com/aiviemarketing/aivie-recaptcha/commit/2e138e8b8f1a559f3fd637ae961c37ba0d200767))
+
 ### [7.2.3](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.2...v7.2.3) (2026-09-11)
 
 
