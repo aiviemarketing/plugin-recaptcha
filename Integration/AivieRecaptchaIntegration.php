@@ -6,9 +6,10 @@ namespace MauticPlugin\AivieRecaptchaBundle\Integration;
 
 use Mautic\IntegrationsBundle\Integration\BasicIntegration;
 use Mautic\IntegrationsBundle\Integration\ConfigurationTrait;
-use Mautic\IntegrationsBundle\Integration\Interfaces\BasicInterface;
 
-class AivieRecaptchaIntegration extends BasicIntegration implements BasicInterface
+// Config/config.php explicitly registers the basic integration. Support subclasses must not
+// inherit BasicInterface and be auto-tagged as additional basic integrations.
+class AivieRecaptchaIntegration extends BasicIntegration
 {
     use ConfigurationTrait;
 
