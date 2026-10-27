@@ -12,7 +12,6 @@ use MauticPlugin\AivieRecaptchaBundle\EventListener\FormSubscriber;
 use MauticPlugin\AivieRecaptchaBundle\Integration\AivieRecaptchaIntegration;
 use MauticPlugin\AivieRecaptchaBundle\Integration\ConfigInterface;
 use MauticPlugin\AivieRecaptchaBundle\Service\RecaptchaClient;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -47,32 +46,9 @@ class IntegrationTest extends TestCase
             ->willReturn($this->integration);
     }
 
-    public function testOnFormValidate()
+    public function testOnFormValidate(): void
     {
-        /** @var LeadModel $leadModel */
-        $leadModel = $this->getMockBuilder(LeadModel::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var MockObject|ValidationEvent $validationEvent */
-        $validationEvent = $this->getMockBuilder(ValidationEvent::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $translator = $this->createMock(TranslatorInterface::class);
-
-        $validationEvent
-            ->method('getValue')
-            ->willReturn('any-value-should-work');
-        $validationEvent
-            ->expects($this->never())
-            ->method('failedValidation');
-        $validationEvent
-            ->method('getValue')
-            ->willReturn('test');
-        $validationEvent
-            ->method('getField')
-            ->willReturn(new Field());
+        $validationEvent = new ValidationEvent(new Field(), 'test');
 
         $formSubscriber =  new FormSubscriber(
             $this->eventDispatcher,
@@ -83,5 +59,7 @@ class IntegrationTest extends TestCase
             $this->createMock(LoggerInterface::class),
         );
         $formSubscriber->onFormValidate($validationEvent);
+
+        self::assertTrue($validationEvent->isValid());
     }
 }

@@ -64,110 +64,85 @@ class FormSubscriberTest extends TestCase
 
     public function testOnFormBuildAddsDisabledFieldWhenNotConfigured(): void
     {
-        $event = $this->createMock(FormBuilderEvent::class);
+        $event = new FormBuilderEvent($this->translator);
 
         $this->config->method('isPublished')->willReturn(true);
         $this->config->method('isConfigured')->willReturn(false);
 
-        $event->expects($this->once())
-            ->method('addFormField')
-            ->with('plugin.recaptcha', $this->callback(function (array $options): bool {
-                return '@AivieRecaptcha/Field/recaptcha.html.twig' === $options['template']
-                    && false === $options['isEnabled']
-                    && '' === $options['siteKey']
-                    && '' === $options['tagAction'];
-            }));
-
-        $event->expects($this->once())
-            ->method('addValidator')
-            ->with('plugin.recaptcha.validator', $this->isType('array'));
-
         $this->subscriber->onFormBuild($event);
+
+        $options = $event->getFormFields()['plugin.recaptcha'];
+        self::assertSame('@AivieRecaptcha/Field/recaptcha.html.twig', $options['template']);
+        self::assertFalse($options['isEnabled']);
+        self::assertSame('', $options['siteKey']);
+        self::assertSame('', $options['tagAction']);
+        self::assertSame(RecaptchaEvents::ON_FORM_VALIDATE, $event->getValidators()['plugin.recaptcha']);
     }
 
     public function testOnFormBuildAddsDisabledFieldWhenNotPublished(): void
     {
-        $event = $this->createMock(FormBuilderEvent::class);
+        $event = new FormBuilderEvent($this->translator);
 
         $this->config->method('isPublished')->willReturn(false);
         $this->config->expects($this->never())->method('isConfigured');
 
-        $event->expects($this->once())
-            ->method('addFormField')
-            ->with('plugin.recaptcha', $this->callback(function (array $options): bool {
-                return '@AivieRecaptcha/Field/recaptcha.html.twig' === $options['template']
-                    && false === $options['isEnabled']
-                    && '' === $options['siteKey']
-                    && '' === $options['tagAction'];
-            }));
-
-        $event->expects($this->once())
-            ->method('addValidator')
-            ->with('plugin.recaptcha.validator', $this->isType('array'));
-
         $this->subscriber->onFormBuild($event);
+
+        $options = $event->getFormFields()['plugin.recaptcha'];
+        self::assertSame('@AivieRecaptcha/Field/recaptcha.html.twig', $options['template']);
+        self::assertFalse($options['isEnabled']);
+        self::assertSame('', $options['siteKey']);
+        self::assertSame('', $options['tagAction']);
+        self::assertSame(RecaptchaEvents::ON_FORM_VALIDATE, $event->getValidators()['plugin.recaptcha']);
     }
 
     public function testOnFormBuildAddsRecaptchaFieldWhenConfigured(): void
     {
-        $event = $this->createMock(FormBuilderEvent::class);
+        $event = new FormBuilderEvent($this->translator);
 
         $this->config->method('isPublished')->willReturn(true);
         $this->config->method('isConfigured')->willReturn(true);
         $this->config->method('getSiteKey')->willReturn('test_site_key');
         $this->recaptchaClient->method('getTagActionName')->willReturn('test_tag_action');
 
-        $event->expects($this->once())
-            ->method('addFormField')
-            ->with('plugin.recaptcha', $this->callback(function ($options) {
-                return RecaptchaType::class === $options['formType']
-                    && '@AivieRecaptcha/Field/recaptcha.html.twig' === $options['template']
-                    && true === $options['isEnabled']
-                    && 'test_site_key' === $options['siteKey']
-                    && 'test_tag_action' === $options['tagAction'];
-            }));
-
-        $event->expects($this->once())
-            ->method('addValidator')
-            ->with('plugin.recaptcha.validator', $this->isType('array'));
-
         $this->subscriber->onFormBuild($event);
+
+        $options = $event->getFormFields()['plugin.recaptcha'];
+        self::assertSame(RecaptchaType::class, $options['formType']);
+        self::assertSame('@AivieRecaptcha/Field/recaptcha.html.twig', $options['template']);
+        self::assertTrue($options['isEnabled']);
+        self::assertSame('test_site_key', $options['siteKey']);
+        self::assertSame('test_tag_action', $options['tagAction']);
+        self::assertSame(RecaptchaEvents::ON_FORM_VALIDATE, $event->getValidators()['plugin.recaptcha']);
     }
 
     public function testOnFormValidateSuccess(): void
     {
-        $event = $this->createMock(ValidationEvent::class);
+        $event = new ValidationEvent(new Field(), '');
 
         $this->config->method('isPublished')->willReturn(true);
         $this->config->method('isConfigured')->willReturn(true);
         $this->recaptchaClient->method('verify')->willReturn(true);
-        $event->expects($this->once())->method('getValue')->willReturn('');
-        $event->expects($this->once())->method('getField')->willReturn(new Field());
-
-        $event->expects($this->never())->method('failedValidation');
-
         $this->subscriber->onFormValidate($event);
+
+        self::assertTrue($event->isValid());
     }
 
     public function testOnFormValidateFailure(): void
     {
-        $event = $this->createMock(ValidationEvent::class);
+        $event = new ValidationEvent(new Field(), '');
 
         $this->config->method('isPublished')->willReturn(true);
         $this->config->method('isConfigured')->willReturn(true);
         $this->recaptchaClient->method('verify')->willReturn(false);
-        $event->expects($this->once())->method('getValue')->willReturn('');
-        $event->expects($this->once())->method('getField')->willReturn(new Field());
-
         $this->translator->method('trans')
             ->with('mautic.integration.recaptcha.failure_message')
             ->willReturn('reCAPTCHA was not successful.');
 
-        $event->expects($this->once())
-            ->method('failedValidation')
-            ->with('reCAPTCHA was not successful.');
-
         $this->subscriber->onFormValidate($event);
+
+        self::assertFalse($event->isValid());
+        self::assertSame('reCAPTCHA was not successful.', $event->getInvalidReason());
     }
 
     public function testLeadPostSaveListener(): void
@@ -181,13 +156,11 @@ class FormSubscriberTest extends TestCase
 
         $this->eventDispatcher->method('addListener')
             ->with(LeadEvents::LEAD_POST_SAVE, $this->isType('callable'), -255)
-            ->will($this->returnCallback(function ($eventName, $callback) use ($leadEvent) {
+            ->willReturnCallback(function ($eventName, $callback) use ($leadEvent) {
                 $callback($leadEvent);
-            }));
+            });
 
-        $event = $this->createMock(ValidationEvent::class);
-        $event->expects($this->once())->method('getValue')->willReturn('');
-        $event->expects($this->once())->method('getField')->willReturn(new Field());
+        $event = new ValidationEvent(new Field(), '');
 
         $this->config->method('isPublished')->willReturn(true);
         $this->config->method('isConfigured')->willReturn(true);
