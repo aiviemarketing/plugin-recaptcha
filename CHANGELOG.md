@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [7.2.6](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.5...v7.2.6) (2026-10-27)
+
+
+### Code Refactoring
+
+* **repo:** push release refs atomically ([288d168](https://github.com/aiviemarketing/aivie-recaptcha/commit/288d168f42bb871d40121fc0c969f155fa11b29b))
+
 ### [7.2.5](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.4...v7.2.5) (2026-10-27)
 
 
