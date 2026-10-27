@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [7.2.5](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.4...v7.2.5) (2026-10-27)
+
+
+### Code Refactoring
+
+* **repo:** migrate PHPUnit metadata to attributes ([5887423](https://github.com/aiviemarketing/aivie-recaptcha/commit/5887423520c92dcca623b20ff83fa75cc9a68218))
+
 ### [7.2.4](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.3...v7.2.4) (2026-10-26)
 
 
