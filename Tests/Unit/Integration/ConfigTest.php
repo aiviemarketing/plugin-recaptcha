@@ -73,9 +73,7 @@ class ConfigTest extends TestCase
         $this->assertEmpty($this->config->isPublished());
     }
 
-    /**
-     * @dataProvider dataForPluginIsPublished
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataForPluginIsPublished')]
     public function testIfPluginIsPublished(bool $setting, bool $expected): void
     {
         $this->integrationEntity
