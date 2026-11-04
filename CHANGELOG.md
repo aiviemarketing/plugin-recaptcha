@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [7.2.7](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.6...v7.2.7) (2026-11-04)
+
+
+### Bug Fixes
+
+* **repo:** honor explicit version bumps ([3cc3dcc](https://github.com/aiviemarketing/aivie-recaptcha/commit/3cc3dccfb1dfdb1beda34145042f6266812b36ee))
+
 ### [7.2.6](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.5...v7.2.6) (2026-10-27)
 
 
