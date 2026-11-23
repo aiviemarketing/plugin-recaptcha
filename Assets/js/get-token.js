@@ -14,7 +14,7 @@ function getTokenAndValidateRecaptcha(formId, siteKey, tagAction) {
     if (!form) {
         throw new Error(`Form with id '${formId}' not found`);
     }
-    inputElement = form.querySelector(`input.${recaptchaTokenClass}`);
+    const inputElement = form.querySelector(`input.${recaptchaTokenClass}`);
     if (!inputElement) {
         throw new Error(`No input element found with class '${recaptchaTokenClass}'`);
     }
