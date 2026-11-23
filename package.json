@@ -18,7 +18,8 @@
     "aivie"
   ],
   "scripts": {
-    "test": "ddev exec 'APP_ENV=test composer test plugins/AivieRecaptchaBundle'",
+    "test": "npm run test:javascript && ddev exec 'APP_ENV=test composer test plugins/AivieRecaptchaBundle'",
+    "test:javascript": "node --test Tests/JavaScript/*.test.js",
     "fixcs": "ddev exec composer fixcs plugins/AivieRecaptchaBundle",
     "changelog:preview": "standard-version --dry-run",
     "release": "npm run release:patch",
