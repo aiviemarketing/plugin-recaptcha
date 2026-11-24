@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [7.2.8](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.7...v7.2.8) (2026-11-24)
+
+
+### Bug Fixes
+
+* **recaptcha:** isolate token inputs per form ([8e19fd8](https://github.com/aiviemarketing/aivie-recaptcha/commit/8e19fd808963a04556d27fd1d969ce2b62b10d3a))
+
 ### [7.2.7](https://github.com/aiviemarketing/aivie-recaptcha/compare/v7.2.6...v7.2.7) (2026-11-04)
 
 
